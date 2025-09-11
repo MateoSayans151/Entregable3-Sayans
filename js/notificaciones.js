@@ -1,8 +1,8 @@
-import {mostrarPokemones} from "./script.js";
+import {showCards} from "./pokemones.js";
 Toastify({
     text: "Hello World!",
 }).showToast();
 
 document.addEventListener("DOMContentLoaded", () => {
-    mostrarPokemones();
+    showCards();
 });
