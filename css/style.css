@@ -16,3 +16,8 @@ h1{
     margin: 10px;
     text-align: center;
 }
+#output{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}

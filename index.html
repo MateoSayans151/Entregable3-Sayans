@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificación de usuarios</title>
-    <script defer src="js/script.js"></script>
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body>
-    <h1>Creación de Pokemones</h1>
+    <h1>Creación de Equipos Pokemon</h1>
 
-    <p>Bienvenido a la creación de Pokemones</p>
-    <p>Por favor tenga en cuenta que este es un prototipo.Acá puede crear,eliminar o modificar distintos pokemones.Tenga en cuenta que no están todos los colores de los diferentes tipos ya que solo es una demostración</p>
+    <p>Bienvenido a la creación de Equipos Pokemon</p>
+    <p>Por favor tenga en cuenta que este es un prototipo.Acá puede crear,eliminar o modificar distintos equipos.Tenga en cuenta que no están todos los colores de los diferentes tipos ya que solo es una demostración</p>
     <div id="cuadrado">
         <p>Nombre</p>
         <textarea name="name" id="name"></textarea>
@@ -20,9 +20,15 @@
 
     </div>
     <div id="buttons">
-        <button id="add">Agregar Pokémon</button>
-        <button id="modify"> Modificar Nivel Evolutivo</button>
+        <button id="add">Agregar Equipo</button>
+        <button id="modify"> Modificar Equipo</button> 
+        <!-- <button id="search">Buscar Equipo</button> -->
+        <!-- Ver si puedo agregar el boton modificar equipo al objeto-->
     </div>
     <div id="container"></div>
+    <div id="output"></div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script defer src="js/script.js"></script>
+    <script defer src="js/estetica.js"></script>
 </body>
 </html>
