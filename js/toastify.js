@@ -3,6 +3,4 @@ Toastify({
     text: "Hello World!",
 }).showToast();
 
-document.addEventListener("DOMContentLoaded", () => {
-    showCards();
-});
+

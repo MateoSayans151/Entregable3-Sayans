@@ -11,27 +11,26 @@ export class Pokedex{
         localStorage.setItem("teams",JSON.stringify(this.teams));
     }
     /**
-  * @description Agrega un nuevo pokemon
+  * @description Agrega un nuevo equipo
   * @param {int} id
   * @param {string} name
-  * @param {string} type
   * @returns {void}
   */
-    addTeam(name,type){
+    addTeam(name){
         if(myPokedex.teams.find(teamsExistentes => name === teamsExistentes.name) != undefined){
         window.alert("Ya existe un equipo con ese nombre");
     }else{
-        const evolutionLevel = assignEvolutionLevel();
-        const pokemon = new Pokemon(name,type,evolutionLevel);
-        this.teams.push(pokemon);
-        window.alert(`Se a creado el Pokemon correctamente\nNombre: ${name}\nTipo: ${type}\nNivel Evolutivo: ${evolutionLevel}`);
+        const capacity = assignCapacity();
+        const team = new Team(name,capacity);
+        this.teams.push(team);
+        window.alert(`Se a creado el equipo correctamente\nNombre: ${name}\nCapacidad: ${capacity}`);
         myPokedex.saveTeamsInStorage();
         renderTeams();
     }
 
     }
     /**
-  * @description Borra un Pokemón
+  * @description Borra un Equipo
   * @param {int} id
   * @returns {void}
   */
@@ -48,7 +47,7 @@ export class Pokedex{
     }
     }
     /**
-  * @description Modifica un Pokemón según su ID
+  * @description Modifica el nombre de un equipo
   * @param {int} id
   * @returns {void}
   */
@@ -78,28 +77,26 @@ export class Pokedex{
 }
 
  /**
-  * @description Clase de Pokemón
+  * @description Clase de Equipo
   * @param {int} id
   * @param {string} name
-  * @param {string} type
-  * @param {int} evolutionLevel
+  * @param {int} capacity
   */
 
- class Pokemon {
+ class Team {
    static lastId = 0;
 
-   constructor(name, type, evolutionLevel) {
-    Pokemon.lastId += 1;
-    this.id = Pokemon.lastId;
+   constructor(name, capacity) {
+    Team.lastId += 1;
+    this.id = Team.lastId;
     this.name = name;
-    this.type = type;
-    this.evolutionLevel = evolutionLevel;
+    this.capacity = capacity;
    }
 }
 /* */
 /*Renderizado */
 /**
-  * @description Renderiza los Pokemones creados
+  * @description Renderiza los Equipos creados
   */
 const myPokedex = new Pokedex();
 export function renderTeams(){
@@ -109,69 +106,44 @@ export function renderTeams(){
         teamDiv.id = "team";
         const teamInfo = document.createElement("div");
 
-        teamInfo.innerHTML = `<p><strong>${team.id}</strong></p><p><strong>${team.name}</strong> - ${team.type}</p>
+        teamInfo.innerHTML = `<p><strong>${team.id}</strong></p><p><strong>${team.name}</strong> - ${team.capacity}</p>
             <p>Nivel Evolutivo: ${team.evolutionLevel}</p>`;
 
-        teamDiv.style.backgroundColor = assignColour(team.type);
+        teamDiv.style.backgroundColor = assignColour(team.capacity);
+
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Eliminar";
         deleteBtn.addEventListener("click",() => myPokedex.deleteTeam(team.id));
 
+        const modifybtn = document.createElement("button");
+        modifybtn.textContent = "Modificar";
+        modifybtn.addEventListener("click",() => myPokedex.modifyTeam(team.id));
+
+
         teamDiv.appendChild(teamInfo);
         teamDiv.appendChild(deleteBtn)
+        teamDiv.appendChild(modifybtn);
 
     container.appendChild(teamDiv);
     });
 }
 
 /**
-  * @description Asigna un background color a cada pokemon según su tipo.Si es tipo nomal o uno inexistente, se deja en blanco.
-  * @param {HTMLElement} pokemonDiv
-  * @param {string} pokemonType
+  * @description Asigna un background color a cada equipo según su capacidad. Si es tipo normal o uno inexistente, se deja en blanco.
+  * @param {HTMLElement} teamDiv
+  * @param {int} teamCapacity
   * @returns {string} colour
   *
   */
-function assignColour(teamType){
-    let colour = " ";
-    switch(teamType){
-    case "Fuego":
-        colour = "red";
-        break;
-    case "Agua":
-        colour  = "blue";
-        break;
-    case "Planta":
+
+function assignColour(teamCapacity){
+    let colour = "";
+    if(teamCapacity > 5){
         colour = "green";
-        break;
-    case "Eléctrico":
+    }else if(teamCapacity > 2){
         colour = "yellow";
-        break;
-    case "Hielo":
-        colour = "lightblue";
-        break;
-    case "Siniestro":
-        colour = "darkgray";
-        break;
-    case "Psíquico":
-        colour = "purple";
-        break;
-    case "Roca":
-        colour = "gray";
-        break;
-    case "Hada":
-        colour = "pink";
-        break;
-    case "Bicho":
-        colour = "brown";
-        break;
-    case "Veneno":
-        colour = "purple";
-        break;
-    case "Dragon":
-        colour = "darkblue";
-        break;
-    default:
-        colour = "white";
+    }else{
+        colour = "red";
     }
     return colour;
 }
@@ -202,19 +174,19 @@ function verifyTeamExistence(id){
     return validation;
 }
 
-/* Asignación de nivel evolutivo */
+/* Asignación de capacidad */
 /**
-  * @description Función que asigna el nivel evolutivo a un Pokémon
-  * @returns {int} level
+  * @description Función que asigna la capacidad a un equipo
+  * @returns {int} capacity
   */
-function assignEvolutionLevel(){
-    let level = prompt("Por favor ingrese el nivel evolutivo del Pokemon");
-    while(isNaN(level)){
-        level = prompt("Por favor ingrese un dato numérico");
+function assignCapacity(){
+    let capacity = prompt("Por favor ingrese la capacidad del equipo");
+    while(isNaN(capacity)){
+        capacity = prompt("Por favor ingrese un dato numérico");
     }
-    return level;
+    return capacity;
 }
 
-export function addTeam(name,type){
-    myPokedex.addTeam(name,type);
+export function addTeam(name,capacity){
+    myPokedex.addTeam(name,capacity);
 };

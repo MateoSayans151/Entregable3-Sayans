@@ -47,5 +47,15 @@ export function createCard(pokemon) {
 
 
 
+class Pokemon {
+   static lastId = 0;
 
+   constructor(name, type, evolutionLevel) {
+    Pokemon.lastId += 1;
+    this.id = Pokemon.lastId;
+    this.name = name;
+    this.type = type;
+    this.evolutionLevel = evolutionLevel;
+   }
+}
 
