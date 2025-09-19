@@ -1,4 +1,4 @@
-/*Estructura*/
+import { addPokemonToCart } from "./carrito.js";
 
 async function renderPokemons() {
     const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
@@ -27,19 +27,19 @@ export function createCard(pokemon) {
         console.log(pokemonData);//Resultado de la promesa
         card.innerHTML = `
             <h2>${pokemon.name}</h2>
-            <img src="${pokemonData.sprites.front_default}" alt="${pokemon.name}">
+            <img src="${pokemonData.sprites.front_default}" alt="${pokemon.name}" class="pokemon-image">
+            <button class="buyButton">Agregar</button>
 
         `;
-        const buyBtn = document.createElement("button");
-        buyBtn.textContent = "Comprar";
+        const buyBtn = card.querySelector(".buyButton");
         buyBtn.addEventListener("click",() =>
         {
             const newPokemon = new Pokemon(pokemonData.id,pokemon.name);
-            addToCart(newPokemon);
+            addPokemonToCart(newPokemon);
         });
-        //puedo usar promesa.finally para avisar cuando se creó un equipo sea cual sea el resultado.
-        // O tambien lo puedo usar para una vez que se hayan cargado los pokemones
+        
         card.appendChild(buyBtn);
+        card.className = "pokemon-card";
     });
     div.appendChild(card);
 }

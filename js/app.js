@@ -1,4 +1,4 @@
-import { renderCart} from "./equipos.js";
+import { renderCart} from "./carrito.js";
 import {showCards} from "./pokemones.js";
 
 
@@ -8,5 +8,3 @@ document.addEventListener("DOMContentLoaded", function(){
     showCards();
     renderCart();
 });
-
-// UTILIZAR TAILWIND PARA ESTILOS

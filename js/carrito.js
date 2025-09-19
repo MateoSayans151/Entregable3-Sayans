@@ -16,54 +16,54 @@ export class Cart{
   * @param {string} name
   * @returns {void}
   */
-    addPokemon(pokemon){
+    addToCart(pokemon){
         const amount = assignAmount();
         pokemon.amount = amount;
         this.cart.push(pokemon);
         window.alert(`Se a creado el equipo correctamente\nNombre: ${pokemon.name}\nCapacidad: ${amount}`);
-        myPokedex.saveCartInStorage();
+        myCart.saveCartInStorage();
         renderCart();
 
     }
     /**
-  * @description Borra un Equipo
-  * @param {int} id
+  * @description Borra un Pokemon del carrito
+  * @param {string} name
   * @returns {void}
   */
-    deleteItem(name){
+    deleteItem(id){
     if(this.cart.length === 0){
         noItems();
-    }else if(verifyItemExistence(name) == false){
+    }else if(verifyItemExistence(id) == false){
         return;
     }else{
-        this.cart = this.cart.filter((itemToDelete) => itemToDelete.name !== name);
+        this.cart = this.cart.filter((itemToDelete) => itemToDelete.id !== id);
         renderCart();
-        window.alert(`El equipo fue eliminado correctamente`);
+        window.alert(`El pokemon fue eliminado correctamente`);
         myCart.saveCartInStorage();
     }
     }
     /**
-  * @description Modifica el nombre de un equipo
+  * @description Modifica la cantidad de un pokemon en el carrito
   * @param {int} id
   * @returns {void}
   */
-    modifyItem(name){
+    modifyItem(id){
     if(this.cart.length === 0){
         noItems();
 
-    }else if(verifyItemExistence(name) == false){
+    }else if(verifyItemExistence(id) == false){
         return;
 
     }else{
 
     for(let i = 0; i < this.cart.length; i++){
-        if(this.cart[i].name === name){
-            newLevel = prompt("Por favor ingrese el nuevo nivel evolutivo del Pokemon");
-            while(isNaN(newLevel) || newLevel === ""){
-                newLevel = prompt("Por favor ingrese un número válido");
+        if(this.cart[i].id === id){
+            const NewAmount = prompt("Por favor ingrese la nueva cantidad del Pokemon");
+            while(isNaN(NewAmount) || NewAmount === ""){
+                NewAmount = prompt("Por favor ingrese un número válido");
             }
-            this.cart[i].evolutionLevel = newLevel;
-            window.alert(`Se cambió el nivel evolutivo viejo de ${name}. El nuevo nivel evolutivo es ${newLevel}`);
+            this.cart[i].amount = NewAmount;
+            window.alert(`Se cambió la cantidad vieja de ${this.cart[i].name}. La nueva cantidad es ${NewAmount}`);
         }
     }
     myCart.saveCartInStorage();
@@ -88,15 +88,13 @@ export function renderCart(){
 
         pokemonInfo.innerHTML = `<p><strong>${pokemon.id}</strong></p><p><strong>${pokemon.name}</strong> - ${pokemon.amount}</p>`;
 
-        pokemonDiv.style.backgroundColor = assignColour(pokemon.amount);
-
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Eliminar";
-        deleteBtn.addEventListener("click",() => myCart.deleteItem(pokemon.name));
+        deleteBtn.addEventListener("click",() => myCart.deleteItem(pokemon.id));
 
         const modifybtn = document.createElement("button");
         modifybtn.textContent = "Modificar";
-        modifybtn.addEventListener("click",() => myCart.modifyItem(pokemon.name));
+        modifybtn.addEventListener("click",() => myCart.modifyItem(pokemon.id));
 
 
         pokemonDiv.appendChild(pokemonInfo);
@@ -135,7 +133,7 @@ function itemNotExist(id){
   */
 function verifyItemExistence(id){
     const validation = true;
-    if(myPokedex.teams.find(team => team.id === id) == undefined){
+    if(myCart.cart.find(team => team.id === id) == undefined){
         itemNotExist(id);
         validation = false;
     }
@@ -155,6 +153,6 @@ function assignAmount(){
     return amount;
 }
 
-export function addPokemon(name,amount){
-    myPokedex.addPokemon(name,amount);
+export function addPokemonToCart(pokemon){
+    myCart.addToCart(pokemon);
 };
