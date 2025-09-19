@@ -30,32 +30,31 @@ export function createCard(pokemon) {
             <img src="${pokemonData.sprites.front_default}" alt="${pokemon.name}">
 
         `;
-        const detailsBtn = document.createElement("button");
-        detailsBtn.textContent = "Ver detalles";
-        detailsBtn.addEventListener("click",() =>
+        const buyBtn = document.createElement("button");
+        buyBtn.textContent = "Comprar";
+        buyBtn.addEventListener("click",() =>
         {
-            Toastify({
-                text: `ID: ${pokemonData.id} - Altura: ${pokemonData.height} - Peso: ${pokemonData.weight}`,
-            }).showToast();
+            const newPokemon = new Pokemon(pokemonData.id,pokemon.name);
+            addToCart(newPokemon);
         });
         //puedo usar promesa.finally para avisar cuando se creó un equipo sea cual sea el resultado.
         // O tambien lo puedo usar para una vez que se hayan cargado los pokemones
-        card.appendChild(detailsBtn);
+        card.appendChild(buyBtn);
     });
     div.appendChild(card);
 }
 
 
-
+/**
+  * @description Clase de Equipo
+  * @param {int} id
+  * @param {string} name
+  */
 class Pokemon {
-   static lastId = 0;
 
-   constructor(name, type, evolutionLevel) {
-    Pokemon.lastId += 1;
-    this.id = Pokemon.lastId;
+constructor(id,name) {
+    this.id = id;
     this.name = name;
-    this.type = type;
-    this.evolutionLevel = evolutionLevel;
-   }
+}
 }
 

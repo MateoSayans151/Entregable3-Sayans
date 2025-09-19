@@ -1,32 +1,28 @@
 
-export class Pokedex{
+export class Cart{
     constructor(){
-        this.teams = JSON.parse(localStorage.getItem("teams")) || [];
+        this.cart = JSON.parse(localStorage.getItem("cart")) || [];
     }
     /**
   * @description Guarda los equipos en el local storage
   * @returns {void}
   */
-    saveTeamsInStorage(){
-        localStorage.setItem("teams",JSON.stringify(this.teams));
+    saveCartInStorage(){
+        localStorage.setItem("cart",JSON.stringify(this.cart));
     }
     /**
-  * @description Agrega un nuevo equipo
+  * @description Agrega un pokemon al carrito
   * @param {int} id
   * @param {string} name
   * @returns {void}
   */
-    addTeam(name){
-        if(myPokedex.teams.find(teamsExistentes => name === teamsExistentes.name) != undefined){
-        window.alert("Ya existe un equipo con ese nombre");
-    }else{
-        const capacity = assignCapacity();
-        const team = new Team(name,capacity);
-        this.teams.push(team);
-        window.alert(`Se a creado el equipo correctamente\nNombre: ${name}\nCapacidad: ${capacity}`);
-        myPokedex.saveTeamsInStorage();
-        renderTeams();
-    }
+    addPokemon(pokemon){
+        const amount = assignAmount();
+        pokemon.amount = amount;
+        this.cart.push(pokemon);
+        window.alert(`Se a creado el equipo correctamente\nNombre: ${pokemon.name}\nCapacidad: ${amount}`);
+        myPokedex.saveCartInStorage();
+        renderCart();
 
     }
     /**
@@ -34,16 +30,16 @@ export class Pokedex{
   * @param {int} id
   * @returns {void}
   */
-    deleteTeam(id){
-    if(this.teams.length === 0){
-        noTeams();
-    }else if(verifyTeamExistence(id) == false){
+    deleteItem(name){
+    if(this.cart.length === 0){
+        noItems();
+    }else if(verifyItemExistence(name) == false){
         return;
     }else{
-        this.teams = this.teams.filter((teamToDelete) => teamToDelete.id !== id);
-        renderTeams();
+        this.cart = this.cart.filter((itemToDelete) => itemToDelete.name !== name);
+        renderCart();
         window.alert(`El equipo fue eliminado correctamente`);
-        myPokedex.saveTeamsInStorage();
+        myCart.saveCartInStorage();
     }
     }
     /**
@@ -51,80 +47,63 @@ export class Pokedex{
   * @param {int} id
   * @returns {void}
   */
-    modifyTeam(id){
-    if(this.teams.length === 0){
-        noTeams();
+    modifyItem(name){
+    if(this.cart.length === 0){
+        noItems();
 
-    }else if(verifyTeamExistence(id) == false){
+    }else if(verifyItemExistence(name) == false){
         return;
 
     }else{
 
-    for(let i = 0; i < this.teams.length; i++){
-        if(this.teams[i].id === id){
+    for(let i = 0; i < this.cart.length; i++){
+        if(this.cart[i].name === name){
             newLevel = prompt("Por favor ingrese el nuevo nivel evolutivo del Pokemon");
             while(isNaN(newLevel) || newLevel === ""){
                 newLevel = prompt("Por favor ingrese un número válido");
             }
-            this.teams[i].evolutionLevel = newLevel;
+            this.cart[i].evolutionLevel = newLevel;
             window.alert(`Se cambió el nivel evolutivo viejo de ${name}. El nuevo nivel evolutivo es ${newLevel}`);
         }
     }
-    myPokedex.saveTeamsInStorage();
-    renderTeams();
+    myCart.saveCartInStorage();
+    renderCart();
     }
 }
 }
 
- /**
-  * @description Clase de Equipo
-  * @param {int} id
-  * @param {string} name
-  * @param {int} capacity
-  */
 
- class Team {
-   static lastId = 0;
-
-   constructor(name, capacity) {
-    Team.lastId += 1;
-    this.id = Team.lastId;
-    this.name = name;
-    this.capacity = capacity;
-   }
-}
 /* */
 /*Renderizado */
 /**
   * @description Renderiza los Equipos creados
   */
-const myPokedex = new Pokedex();
-export function renderTeams(){
+const myCart = new Cart();
+export function renderCart(){
     container.innerHTML = "";
-    myPokedex.teams.forEach((team) => {
-        const teamDiv = document.createElement("div");
-        teamDiv.id = "team";
-        const teamInfo = document.createElement("div");
+    myCart.cart.forEach((pokemon) => {
+        const pokemonDiv = document.createElement("div");
+        pokemonDiv.id = "pokemon";
+        const pokemonInfo = document.createElement("div");
 
-        teamInfo.innerHTML = `<p><strong>${team.id}</strong></p><p><strong>${team.name}</strong> - ${team.capacity}</p>
-            <p>Nivel Evolutivo: ${team.evolutionLevel}</p>`;
+        pokemonInfo.innerHTML = `<p><strong>${pokemon.id}</strong></p><p><strong>${pokemon.name}</strong> - ${pokemon.amount}</p>`;
 
-        teamDiv.style.backgroundColor = assignColour(team.capacity);
+        pokemonDiv.style.backgroundColor = assignColour(pokemon.amount);
 
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Eliminar";
-        deleteBtn.addEventListener("click",() => myPokedex.deleteTeam(team.id));
+        deleteBtn.addEventListener("click",() => myCart.deleteItem(pokemon.name));
 
         const modifybtn = document.createElement("button");
         modifybtn.textContent = "Modificar";
-        modifybtn.addEventListener("click",() => myPokedex.modifyTeam(team.id));
+        modifybtn.addEventListener("click",() => myCart.modifyItem(pokemon.name));
 
 
-        teamDiv.appendChild(teamInfo);
-        teamDiv.appendChild(deleteBtn)
-        teamDiv.appendChild(modifybtn);
+        pokemonDiv.appendChild(pokemonInfo);
+        pokemonDiv.appendChild(deleteBtn)
+        pokemonDiv.appendChild(modifybtn);
 
-    container.appendChild(teamDiv);
+    container.appendChild(pokemonDiv);
     });
 }
 
@@ -136,39 +115,28 @@ export function renderTeams(){
   *
   */
 
-function assignColour(teamCapacity){
-    let colour = "";
-    if(teamCapacity > 5){
-        colour = "green";
-    }else if(teamCapacity > 2){
-        colour = "yellow";
-    }else{
-        colour = "red";
-    }
-    return colour;
-}
 
 /* Mensajes de errores*/
 /**
   * @description Mensaje de error que aparece cuando no hay Pokemones registrados y se quiere buscar, modificar, eliminar o mostrar un Pokemon
   */
-function noTeams(){
+function noItems(){
     window.alert("No hay Pokemones registrados");
 }
 /**
   * @description Mensaje de error que aparece cuando no existe un Pokemón con el ID especificado
   */
-function teamNotExist(id){
+function itemNotExist(id){
     window.alert(`No existe un equipo con el ID: "${id}"`);
 }
 /*Validaciones */
 /**
   * @description Verifica si existe el equipo solicitado
   */
-function verifyTeamExistence(id){
+function verifyItemExistence(id){
     const validation = true;
     if(myPokedex.teams.find(team => team.id === id) == undefined){
-        teamNotExist(id);
+        itemNotExist(id);
         validation = false;
     }
     return validation;
@@ -177,16 +145,16 @@ function verifyTeamExistence(id){
 /* Asignación de capacidad */
 /**
   * @description Función que asigna la capacidad a un equipo
-  * @returns {int} capacity
+  * @returns {int} amount
   */
-function assignCapacity(){
-    let capacity = prompt("Por favor ingrese la capacidad del equipo");
-    while(isNaN(capacity)){
-        capacity = prompt("Por favor ingrese un dato numérico");
+function assignAmount(){
+    let amount = prompt("Por favor ingrese la cantidad de este pokemon que desea agregar a su carrito");
+    while(isNaN(amount)){
+        amount = prompt("Por favor ingrese un dato numérico");
     }
-    return capacity;
+    return amount;
 }
 
-export function addTeam(name,capacity){
-    myPokedex.addTeam(name,capacity);
+export function addPokemon(name,amount){
+    myPokedex.addPokemon(name,amount);
 };
