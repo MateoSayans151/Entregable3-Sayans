@@ -1,4 +1,5 @@
-
+import {showDeleteToast,showModifyToast,noPokemonsToastify} from "./toastify.js";
+import {showAddAlert, showAskBuyAlert, showDeleteAlert,showBuyAlert} from "./sweetAlert.js";
 export class Cart{
     constructor(){
         this.cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -16,11 +17,12 @@ export class Cart{
   * @param {string} name
   * @returns {void}
   */
-    addToCart(pokemon){
+    async addToCart(pokemon){
         const amount = assignAmount();
         pokemon.amount = amount;
+        pokemon.price = (parseFloat(pokemon.id) * amount) * 37;
         this.cart.push(pokemon);
-        window.alert(`Se a creado el equipo correctamente\nNombre: ${pokemon.name}\nCapacidad: ${amount}`);
+        showAddAlert(pokemon.name,amount);
         myCart.saveCartInStorage();
         renderCart();
 
@@ -30,16 +32,22 @@ export class Cart{
   * @param {string} name
   * @returns {void}
   */
-    deleteItem(id){
+    async deleteItem(id){
     if(this.cart.length === 0){
         noItems();
     }else if(verifyItemExistence(id) == false){
         return;
     }else{
-        this.cart = this.cart.filter((itemToDelete) => itemToDelete.id !== id);
-        renderCart();
-        window.alert(`El pokemon fue eliminado correctamente`);
-        myCart.saveCartInStorage();
+        const pokemonName = this.cart.find(pokemon => pokemon.id === id).name;
+        const decision = await showDeleteAlert(pokemonName);
+        if(decision.isConfirmed){
+            this.cart = this.cart.filter((itemToDelete) => itemToDelete.id !== id);
+            showDeleteToast();
+            renderCart();
+            myCart.saveCartInStorage();
+        }
+
+        
     }
     }
     /**
@@ -47,7 +55,7 @@ export class Cart{
   * @param {int} id
   * @returns {void}
   */
-    modifyItem(id){
+    async modifyItem(id){
     if(this.cart.length === 0){
         noItems();
 
@@ -58,12 +66,15 @@ export class Cart{
 
     for(let i = 0; i < this.cart.length; i++){
         if(this.cart[i].id === id){
-            const NewAmount = prompt("Por favor ingrese la nueva cantidad del Pokemon");
-            while(isNaN(NewAmount) || NewAmount === ""){
+
+            let NewAmount = prompt("Por favor ingrese la nueva cantidad del Pokemon");
+            while(isNaN(NewAmount) || NewAmount === "" || NewAmount === null || NewAmount <= 0){
                 NewAmount = prompt("Por favor ingrese un número válido");
+                
             }
             this.cart[i].amount = NewAmount;
-            window.alert(`Se cambió la cantidad vieja de ${this.cart[i].name}. La nueva cantidad es ${NewAmount}`);
+            this.cart[i].price = (parseFloat(this.cart[i].id) * NewAmount) * 37;
+            showModifyToast();
         }
     }
     myCart.saveCartInStorage();
@@ -79,20 +90,25 @@ export class Cart{
   * @description Renderiza los Equipos creados
   */
 const myCart = new Cart();
-export function renderCart(){
-    container.innerHTML = "";
+export  function renderCart(){
+    const cart = document.getElementById("carrito");
+    cart.className = "cart";
+    cart.innerHTML = "";
     myCart.cart.forEach((pokemon) => {
         const pokemonDiv = document.createElement("div");
         pokemonDiv.id = "pokemon";
+        pokemonDiv.className = "cart-item";
         const pokemonInfo = document.createElement("div");
 
-        pokemonInfo.innerHTML = `<p><strong>${pokemon.id}</strong></p><p><strong>${pokemon.name}</strong> - ${pokemon.amount}</p>`;
+        pokemonInfo.innerHTML = `<p><strong>Id:${pokemon.id}</strong></p><p><strong>${pokemon.name}</strong> - Cantidad: ${pokemon.amount}</p><p><strong>$${pokemon.price}</strong></p>`;
 
         const deleteBtn = document.createElement("button");
+        deleteBtn.className = "deleteButton";
         deleteBtn.textContent = "Eliminar";
         deleteBtn.addEventListener("click",() => myCart.deleteItem(pokemon.id));
 
         const modifybtn = document.createElement("button");
+        modifybtn.className = "modifyButton";
         modifybtn.textContent = "Modificar";
         modifybtn.addEventListener("click",() => myCart.modifyItem(pokemon.id));
 
@@ -101,8 +117,29 @@ export function renderCart(){
         pokemonDiv.appendChild(deleteBtn)
         pokemonDiv.appendChild(modifybtn);
 
-    container.appendChild(pokemonDiv);
+        cart.appendChild(pokemonDiv);
+
+        
     });
+    const buyBtn = document.createElement("button");
+        buyBtn.className = "buyButton";
+        buyBtn.textContent = "Comprar";
+        buyBtn.id = "buyButton";
+        buyBtn.addEventListener("click",async () => {
+            const decision = await showAskBuyAlert();
+            if(decision.isConfirmed ){
+                if(myCart.cart.length > 0){
+                    myCart.cart = [];
+                    myCart.saveCartInStorage();
+                    renderCart();
+                    showBuyAlert();
+                }else{
+                    noPokemonsToastify();
+                }
+
+            }
+        });
+        cart.appendChild(buyBtn);
 }
 
 /**
@@ -147,7 +184,8 @@ function verifyItemExistence(id){
   */
 function assignAmount(){
     let amount = prompt("Por favor ingrese la cantidad de este pokemon que desea agregar a su carrito");
-    while(isNaN(amount)){
+
+    while(isNaN(amount) || amount === "" || amount === null || amount <= 0){
         amount = prompt("Por favor ingrese un dato numérico");
     }
     return amount;

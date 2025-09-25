@@ -1,4 +1,4 @@
-import { renderCart} from "./carrito.js";
+import {renderCart} from "./carrito.js";
 import {showCards} from "./pokemones.js";
 
 

@@ -23,18 +23,21 @@ export function createCard(pokemon) {
     const div = document.getElementById("output");
     const card = document.createElement("div");
     const image = fetch(pokemon.url); //Promesa
+    
     image.then(response => response.json()).then(pokemonData => {
-        console.log(pokemonData);//Resultado de la promesa
+        const price = parseFloat(pokemonData.id * 37);
         card.innerHTML = `
-            <h2>${pokemon.name}</h2>
+            <h4 class="pokemon-card h4">${pokemon.name}</h4>
             <img src="${pokemonData.sprites.front_default}" alt="${pokemon.name}" class="pokemon-image">
+            <p class="pokemon-price">Precio: ${price}</p>
             <button class="buyButton">Agregar</button>
 
         `;
+
         const buyBtn = card.querySelector(".buyButton");
         buyBtn.addEventListener("click",() =>
         {
-            const newPokemon = new Pokemon(pokemonData.id,pokemon.name);
+            const newPokemon = new Pokemon(pokemonData.id,pokemon.name,price);
             addPokemonToCart(newPokemon);
         });
         
@@ -49,12 +52,14 @@ export function createCard(pokemon) {
   * @description Clase de Equipo
   * @param {int} id
   * @param {string} name
+  * @param {float} price
   */
 class Pokemon {
 
-constructor(id,name) {
+constructor(id,name,price) {
     this.id = id;
     this.name = name;
+    this.price = price;
 }
 }
 

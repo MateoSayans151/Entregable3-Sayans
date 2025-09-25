@@ -36,7 +36,7 @@ h1{
 
 /* --- Tarjeta de producto --- */
 .pokemon-card {
-  background-color: #fff;
+  background-color: rgb(43, 226, 119);
   border-radius: 12px;
   padding: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -70,13 +70,73 @@ h1{
   text-align: center;
   margin-bottom: 8px;
   color: #333;
+  text-transform: capitalize;
+  background-color: #00c4de;
 }
 
 /* --- Precio del producto --- */
 .pokemon-price {
-  color: #27ae60;
+  color: #000000;
   font-weight: bold;
   font-size: 18px;
   margin-top: auto;
   margin-bottom: 15px;
+}
+/* --- Botón para comprar el carrito --- */
+.buyButton {
+  background-color: #05ff12;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  
+}
+
+/* --- Botón para modificar un pokemon del carrito --- */
+.modifyButton {
+  background-color: #33ffc2;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
+}
+
+/* --- Botón para eliminar un pokemon del carrito --- */
+.deleteButton {
+  background-color: #ff3333;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
+}
+
+/* --- Pokemon en el carrito --- */
+.cart-item {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    text-transform: capitalize;
+}
+
+/* --- Carrito de compras --- */
+.cart{
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+    max-height: 500px;
+    overflow-y: auto;
 }
