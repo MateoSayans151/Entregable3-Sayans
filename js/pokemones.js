@@ -18,7 +18,7 @@ export async function showCards() {
 
     }
 }
-//Con el export puedo usar la función en otros archivos
+
 export function createCard(pokemon) {
     const div = document.getElementById("output");
     const card = document.createElement("div");
